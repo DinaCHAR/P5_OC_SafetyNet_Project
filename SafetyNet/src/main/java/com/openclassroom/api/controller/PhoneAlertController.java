@@ -23,7 +23,7 @@ public class PhoneAlertController {
      * @return La liste des numéros de téléphone des personnes desservies par la caserne spécifiée
      */
     @GetMapping("/phoneAlert")
-    public List<String> getPhoneNumbers(@RequestParam("firestation") String firestationNumber) {
-        return phoneAlertService.getPhoneNumbersByFirestation(firestationNumber);
+    public List<String> getPhoneNumbers(@RequestParam("firestation") String firestation_number) {
+        return phoneAlertService.getPhoneNumbersByFirestation(firestation_number);
     }
 }

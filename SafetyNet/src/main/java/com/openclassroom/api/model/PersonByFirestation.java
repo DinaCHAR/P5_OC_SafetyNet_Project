@@ -7,6 +7,7 @@ public class PersonByFirestation {
 	private List<Person> persons;
 	private int childCount;
 	private int adultCount;
+	private int personsAtAddress;
 	
 	public PersonByFirestation() {
 		
@@ -31,6 +32,13 @@ public class PersonByFirestation {
 		this.adultCount = adultCount;
 	}
 	
+	public int getPersonsAtAddress() {
+		return personsAtAddress;
+	}
+
+	public void setPersonsAtAddress(int personsAtAddress) {
+		this.personsAtAddress = personsAtAddress;
+	}
 	
 	
 }

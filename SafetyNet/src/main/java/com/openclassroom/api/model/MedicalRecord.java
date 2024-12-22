@@ -62,7 +62,7 @@ public class MedicalRecord {
 	
 	  // Ajout de la méthode pour calculer l'âge
     public int getAge() {
-        // Formateur pour la date au format "dd/MM/yyyy"
+        // Formateur pour la date au format "MM/dd/yyyy"
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         // Conversion de la date de naissance en LocalDate
         LocalDate birthDate = LocalDate.parse(this.birthdate, formatter);

@@ -17,14 +17,14 @@ public class PhoneAlertService {
 	    private MyRepository myRepository;
 
 	    // Méthode pour obtenir les numéros de téléphone par numéro de caserne
-	    public List<String> getPhoneNumbersByFirestation(String firestationNumber) {
+	    public List<String> getPhoneNumbersByFirestation(String firestation_number) {
 	        // Initialiser les données
 	        List<Person> persons = myRepository.getPersons();
 	        List<FireStations> fireStations = myRepository.getFireStations();
 
 	        // Trouver toutes les adresses desservies par la caserne donnée
 	        List<String> addresses = fireStations.stream()
-	            .filter(fs -> fs.getStation().equals(firestationNumber))
+	            .filter(fs -> fs.getStation().equals(firestation_number))
 	            .map(FireStations::getAddress)
 	            .collect(Collectors.toList());
 

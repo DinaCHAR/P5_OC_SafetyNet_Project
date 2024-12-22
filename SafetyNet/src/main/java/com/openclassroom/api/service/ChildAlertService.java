@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.openclassroom.api.model.ChildAlert;
 import com.openclassroom.api.model.MedicalRecord;
 import com.openclassroom.api.model.Person;
-import com.openclassroom.api.model.PersonByFirestation;
 import com.openclassroom.api.repository.MyRepository;
 
 import java.util.ArrayList;
