@@ -12,61 +12,69 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ChildAlertService {
 
-    @Autowired
-    private MyRepository myRepository;
+	 @Autowired
+	    private MyRepository myRepository;
 
-    public ChildAlert getChildrenByAddress(String address) {
-        List<Person> personsAtAddress = new ArrayList<>();
-        List<Map<String, Object>> children = new ArrayList<>();
-        List<Map<String, Object>> householdMembers = new ArrayList<>();
+	    /**
+	     * Cette méthode retourne la liste des enfants et des membres du foyer pour une adresse donnée.
+	     * @param address L'adresse pour laquelle on recherche les personnes.
+	     * @return Un objet ChildAlert contenant les enfants et membres du foyer.
+	     */
+	    public ChildAlert getChildrenByAddress(String address) {
+	        List<Map<String, Object>> children = new ArrayList<>();
+	        List<Map<String, Object>> householdMembers = new ArrayList<>();
 
-        // Trouver toutes les personnes vivant à l'adresse
-        for (Person person : myRepository.getPersons()) {
-            if (person.getAddress().equalsIgnoreCase(address)) { // Comparaison insensible à la casse
-                personsAtAddress.add(person);
-            }
-        }
+	        // Trouver toutes les personnes vivant à l'adresse donnée
+	        for (Person person : myRepository.getPersons()) {
+	            if (person.getAddress().equalsIgnoreCase(address)) {
+	                MedicalRecord medicalRecord = (MedicalRecord) findMedicalRecordForPerson(person);
 
-        // Identifier les enfants et les membres du foyer
-        for (Person person : personsAtAddress) {
-            MedicalRecord medicalRecord = findMedicalRecordForPerson(person);
-            if (medicalRecord != null) {
-                int age = medicalRecord.getAge(); // Appel de la méthode dans MedicalRecord
-                if (age <= 18) { // Si enfant (<=18 ans)
-                    Map<String, Object> childInfo = new HashMap<>();
-                    childInfo.put("firstName", person.getFirstName());
-                    childInfo.put("lastName", person.getLastName());
-                    childInfo.put("age", age);
-                    children.add(childInfo);
-                } else { // Si adulte
-                    Map<String, Object> memberInfo = new HashMap<>();
-                    memberInfo.put("firstName", person.getFirstName());
-                    memberInfo.put("lastName", person.getLastName());
-                    householdMembers.add(memberInfo);
-                }
-            }
-        }
+	                if (medicalRecord != null) {
+	                    int age = medicalRecord.getAge();
+	                    
+	                    if (age <= 18) {  // Verification que l'enfant est moins de 18ans
+	                        Map<String, Object> childInfo = new HashMap<>();
+	                        childInfo.put("firstName", person.getFirstName());
+	                        childInfo.put("lastName", person.getLastName());
+	                        childInfo.put("age", age);
+	                        children.add(childInfo); // Ajouter à la liste des enfants
+	                    } else {  // Membres adultes du foyer
+	                        Map<String, Object> memberInfo = new HashMap<>();
+	                        memberInfo.put("firstName", person.getFirstName());
+	                        memberInfo.put("lastName", person.getLastName());
+	                        householdMembers.add(memberInfo);  // Ajouter à la liste des membres du foyer
+	                    }
+	                }
+	            }
+	        }
 
-        // Construire la réponse avec le modèle ChildAlert
-        ChildAlert childAlert = new ChildAlert();
-        childAlert.setPersons(personsAtAddress);
-        childAlert.setChildren(children.isEmpty() ? null : children);
-        childAlert.setHouseholdMembers(householdMembers.isEmpty() ? null : householdMembers);
+	        // Créer un objet ChildAlert avec les informations collectées
+	        ChildAlert childAlert = new ChildAlert();
+	        childAlert.setChildren(children.isEmpty() ? null : children);  // Si aucun enfant, on retourne null
+	        childAlert.setHouseholdMembers(householdMembers.isEmpty() ? null : householdMembers);  // Idem pour les membres du foyer
 
-        // Retourner la réponse
-        return childAlert;
-    }
+	        return childAlert;
+	    }
 
-    private MedicalRecord findMedicalRecordForPerson(Person person) {
-        return myRepository.getMedicalRecords().stream()
-                .filter(record ->
-                        record.getFirstName().equalsIgnoreCase(person.getFirstName()) &&
-                        record.getLastName().equalsIgnoreCase(person.getLastName()))
-                .findFirst()
-                .orElse(null);
-    }
-}
+	    /**
+	     * Recherche du MedicalRecord pour une personne donnée.
+	     */
+	    private List<MedicalRecord> findMedicalRecordForPerson(Person person) {
+	        // Accède à la liste de tous les dossiers médicaux
+	        return myRepository.getMedicalRecords().stream()
+	        
+	                // Filtre les dossiers médicaux pour trouver ceux qui correspondent exactement au prénom et au nom de la personne
+	                .filter(record -> 
+	                    record.getFirstName().equalsIgnoreCase(person.getFirstName()) && // Comparaison du prénom
+	                    record.getLastName().equalsIgnoreCase(person.getLastName()))    // Comparaison du nom de famille
+	                
+	                // Collecte tous les dossiers correspondants dans une liste
+	                .collect(Collectors.toList());
+	    }
+	   
+	}

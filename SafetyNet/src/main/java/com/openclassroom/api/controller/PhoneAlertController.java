@@ -1,12 +1,11 @@
 package com.openclassroom.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.openclassroom.api.model.PhoneByFireStation;
 import com.openclassroom.api.service.PhoneAlertService;
 
 @RestController
@@ -23,7 +22,7 @@ public class PhoneAlertController {
      * @return La liste des numéros de téléphone des personnes desservies par la caserne spécifiée
      */
     @GetMapping("/phoneAlert")
-    public List<String> getPhoneNumbers(@RequestParam("firestation") String firestation_number) {
+    public PhoneByFireStation getPhoneNumbers(@RequestParam("firestation") String firestation_number) {
         return phoneAlertService.getPhoneNumbersByFirestation(firestation_number);
     }
 }

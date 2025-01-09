@@ -20,7 +20,7 @@ public class FireService {
     private MyRepository myRepository;
 
     /**
-     * Récupérer les personnes vivant à une adresse donnée, ainsi que des informations supplémentaires.
+     * Récupérer les personnes vivant à une adresse donnée.
      *
      * @param address L'adresse cible.
      * @return Un objet `PersonByFirestation` contenant les personnes, les enfants, les adultes et le numéro de station.
