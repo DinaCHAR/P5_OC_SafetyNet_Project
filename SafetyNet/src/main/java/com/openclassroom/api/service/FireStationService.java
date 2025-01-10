@@ -62,13 +62,6 @@ public class FireStationService {
 	                }
 	            }
 	        }
-
-	        //CREE UN NOUVEL OBJET DUNE LISTE DE PERSONNE DANS MODEL 
-	        // Création de la réponse à retourner sous forme de carte (Map)
-//	        Map<String, Object> response = new HashMap<>();
-//	        response.put("persons", personsCovered); // Ajouter la liste des personnes couvertes
-//	        response.put("adultCount", adultCount); // Ajouter le nombre d'adultes
-//	        response.put("childCount", childCount); // Ajouter le nombre d'enfants
 	        
 	        PersonByFirestation personByFirestation = new PersonByFirestation();
 	        personByFirestation.setPersons(personsCovered);
