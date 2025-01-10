@@ -21,67 +21,76 @@ public class FloodService {
 	    private MyRepository myRepository;
 
 	    /**
-	     * Cette méthode retourne une liste de tous les foyers desservis par les casernes spécifiées.
-	     * 
-	     * @param stationNumbers Liste des numéros de caserne.
-	     * @return Un mapping des adresses et des informations des habitants associés.
+	     * Cette méthode retourne une liste des foyers (regroupés par adresse) desservis par les casernes spécifiées.
+	     *
+	     * @param stationNumbers Liste des numéros des casernes de pompiers.
+	     * @return Un mapping où chaque clé est une adresse et chaque valeur est une liste des informations des habitants.
 	     */
 	    public Map<String, List<Map<String, Object>>> getHouseholdsByStations(List<Integer> stationNumbers) {
-	        // Trouver les adresses associées aux casernes données
+	        // Étape 1 : Identifier les adresses desservies par les casernes données.
 	        @SuppressWarnings("unlikely-arg-type")
-			Set<String> addresses = myRepository.getFireStations().stream()
-	                .filter(fs -> stationNumbers.contains(fs.getStation())) // Vérifier si la caserne correspond
-	                .map(fs -> fs.getAddress()) // Extraire les adresses associées
-	                .collect(Collectors.toSet()); // Supprimer les doublons
+	        Set<String> addresses = myRepository.getFireStations().stream()
+	                // Filtrer les casernes qui font partie des numéros donnés.
+	                .filter(fs -> stationNumbers.contains(fs.getStation()))
+	                // Extraire les adresses des casernes correspondantes.
+	                .map(fs -> fs.getAddress())
+	                // Supprimer les doublons.
+	                .collect(Collectors.toSet());
 
-	        // Préparer un map pour regrouper les résultats par adresse
+	        // Préparer une map pour stocker les informations des foyers, clé : adresse, valeur : liste des habitants.
 	        Map<String, List<Map<String, Object>>> households = new HashMap<>();
 
-
-	        // Itérer sur les adresses trouvées
+	        // Étape 2 : Itérer sur les adresses récupérées pour collecter les informations des habitants.
 	        for (String address : addresses) {
-	            // Filtrer les personnes vivant à cette adresse
+	            // Trouver toutes les personnes vivant à cette adresse.
 	            List<Person> personsAtAddress = myRepository.getPersons().stream()
-	                    .filter(person -> person.getAddress().equalsIgnoreCase(address))
+	                    .filter(person -> person.getAddress().equalsIgnoreCase(address)) // Vérification adresse insensible à la casse.
 	                    .collect(Collectors.toList());
 
-	            // Récupérer les informations pour chaque personne
+	            // Liste pour stocker les informations des habitants (nom, age, telephone, medical...).
 	            List<Map<String, Object>> residentsInfo = new ArrayList<>();
+
+	            // Étape 3 : Collecter les informations pour chaque habitant à cette adresse.
 	            for (Person person : personsAtAddress) {
 	                Map<String, Object> residentData = new HashMap<>();
-	                residentData.put("firstName", person.getFirstName());
-	                residentData.put("lastName", person.getLastName());
-	                residentData.put("phone", person.getPhone());
+	                residentData.put("firstName", person.getFirstName()); // Prenom de l'habitant.
+	                residentData.put("lastName", person.getLastName()); // Nom de l'habitant.
+	                residentData.put("phone", person.getPhone()); // Telephone de l'habitant.
 
+	                // Récupérer le dossier médical de la personne si disponible.
 	                MedicalRecord medicalRecord = findMedicalRecordForPerson(person);
 	                if (medicalRecord != null) {
-	                    residentData.put("age", medicalRecord.getAge());
-	                    residentData.put("medications", medicalRecord.getMedications());
-	                    residentData.put("allergies", medicalRecord.getAllergies());
+	                    residentData.put("age", medicalRecord.getAge()); // Calcul et ajout de l'âge.
+	                    residentData.put("medications", medicalRecord.getMedications()); // Liste des médicaments.
+	                    residentData.put("allergies", medicalRecord.getAllergies()); // Liste des allergies.
 	                }
 
+	                // Ajouter les informations collectées pour cette personne.
 	                residentsInfo.add(residentData);
 	            }
 
-	            // Associer les informations collectées à l'adresse
+	            // Associer les informations des habitants à leur adresse dans la map finale.
 	            households.put(address, residentsInfo);
 	        }
 
+	        // Retourner le mapping final des foyers par adresse.
 	        return households;
 	    }
 
 	    /**
-	     * Recherche le dossier médical (MedicalRecord) d'une personne à partir de son prénom et de son nom.
-	     * 
+	     * Cette méthode cherche un dossier médical pour une personne spécifique
+	     * en se basant sur son prénom et son nom.
+	     *
 	     * @param person L'objet Person dont on veut retrouver le dossier médical.
-	     * @return Le dossier médical correspondant, ou null si aucun n'est trouvé.
+	     * @return Le dossier médical correspondant ou null si aucun dossier n'est trouvé.
 	     */
 	    private MedicalRecord findMedicalRecordForPerson(Person person) {
+	        // Rechercher dans la liste des dossiers médicaux un enregistrement correspondant au prénom et au nom.
 	        return myRepository.getMedicalRecords().stream()
-	                .filter(record -> 
+	                .filter(record ->
 	                    record.getFirstName().equalsIgnoreCase(person.getFirstName()) &&
-	                    record.getLastName().equalsIgnoreCase(person.getLastName()))
-	                .findFirst()
-	                .orElse(null);
+	                    record.getLastName().equalsIgnoreCase(person.getLastName())) // Comparaison insensible à la casse.
+	                .findFirst() // Récupère le premier dossier correspondant.
+	                .orElse(null); // Retourne null si aucun dossier n'est trouvé.
 	    }
 	}
