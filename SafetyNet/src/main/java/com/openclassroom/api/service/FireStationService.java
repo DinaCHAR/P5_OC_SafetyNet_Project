@@ -8,9 +8,8 @@ import com.openclassroom.api.repository.MyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FireStationService {
@@ -89,4 +88,68 @@ public class FireStationService {
 	        }
 	        return null; // Retourner null si aucun enregistrement n'a été trouvé
 	    }
+
+
+		//==============================
+		// ENDPOINT /firestation
+		// ==============================
+		
+		/**
+		 * Ajoute un nouveau mapping entre une caserne et une adresse.
+		 *
+		 * @param address L'adresse à associer à la caserne.
+		 * @param station Le numéro de la caserne.
+		 * @return FireStations ajouté ou null si un mapping existe déjà.
+		 */
+		public FireStations addFireStationMapping(String address, int station) {
+		    Optional<FireStations> existingMapping = myRepository.getFireStations()
+		            .stream()
+		            .filter(fs -> fs.getAddress().equalsIgnoreCase(address))
+		            .findFirst();
+		
+		    if (existingMapping.isPresent()) {
+		        return null; // Évite les doublons
+		    }
+		
+		    FireStations newMapping = new FireStations();
+		    myRepository.getFireStations().add(newMapping);
+		    return newMapping;
+		}
+		
+		/**
+		 * Met à jour le numéro de la caserne pour une adresse donnée.
+		 *
+		 * @param address L'adresse concernée.
+		 * @param newStation Le nouveau numéro de caserne.
+		 * @return FireStations mis à jour ou null si l'adresse n'existe pas.
+		 */
+		public FireStations updateFireStationMapping(String address, String newStation) {
+		    for (FireStations fs : myRepository.getFireStations()) {
+		        if (fs.getAddress().equalsIgnoreCase(address)) {
+		            fs.setStation(newStation);
+		            return fs;
+		        }
+		    }
+		    return null; // L'adresse n'existe pas
+		}
+		
+		/**
+		 * Supprime le mapping d'une adresse ou d'une caserne.
+		 *
+		 * @param address L'adresse à supprimer.
+		 * @return true si supprimé, false si l'adresse n'existe pas.
+		 */
+		public boolean deleteFireStationMapping(String address) {
+		    List<FireStations> updatedList = myRepository.getFireStations()
+		            .stream()
+		            .filter(fs -> !fs.getAddress().equalsIgnoreCase(address))
+		            .collect(Collectors.toList());
+		
+		    if (updatedList.size() == myRepository.getFireStations().size()) {
+		        return false; // Aucune suppression effectuée
+		    }
+		
+		    myRepository.setFireStations(updatedList);
+		    return true;
+		}
 	}

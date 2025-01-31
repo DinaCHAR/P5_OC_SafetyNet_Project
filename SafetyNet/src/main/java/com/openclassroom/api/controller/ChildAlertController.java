@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassroom.api.model.ChildAlert;
 import com.openclassroom.api.service.ChildAlertService;
 
-import java.util.Map;
 
 @RestController
 public class ChildAlertController {

@@ -28,17 +28,17 @@ public class FloodService {
 	     */
 	    public Map<String, List<Map<String, Object>>> getHouseholdsByStations(List<Integer> stationNumbers) {
 	        // Étape 1 : Identifier les adresses desservies par les casernes données.
-	        @SuppressWarnings("unlikely-arg-type")
-	        Set<String> addresses = myRepository.getFireStations().stream()
-	                // Filtrer les casernes qui font partie des numéros donnés.
-	                .filter(fs -> stationNumbers.contains(fs.getStation()))
-	                // Extraire les adresses des casernes correspondantes.
-	                .map(fs -> fs.getAddress())
-	                // Supprimer les doublons.
-	                .collect(Collectors.toSet());
+	    	// Récupère les adresses des casernes correspondant aux numéros de stations fournis
+	    	Set<String> addresses = myRepository.getFireStations().stream()
+	    	    // Filtre les casernes dont le numéro de station est dans la liste donnée
+	    	    .filter(fs -> stationNumbers.contains(Integer.valueOf(fs.getStation()))) 
+	    	    // Extrait uniquement les adresses des casernes filtrées
+	    	    .map(fs -> fs.getAddress())
+	    	    // Collecte les adresses dans un ensemble (Set) pour éviter les doublons
+	    	    .collect(Collectors.toSet());
 
-	        // Préparer une map pour stocker les informations des foyers, clé : adresse, valeur : liste des habitants.
-	        Map<String, List<Map<String, Object>>> households = new HashMap<>();
+	    	// Initialise une structure de données pour stocker les foyers groupés par adresse
+	    	Map<String, List<Map<String, Object>>> households = new HashMap<>();
 
 	        // Étape 2 : Itérer sur les adresses récupérées pour collecter les informations des habitants.
 	        for (String address : addresses) {

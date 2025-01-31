@@ -32,7 +32,15 @@ public class ChildAlertService {
 	        // Trouver toutes les personnes vivant à l'adresse donnée
 	        for (Person person : myRepository.getPersons()) {
 	            if (person.getAddress().equalsIgnoreCase(address)) {
-	                MedicalRecord medicalRecord = (MedicalRecord) findMedicalRecordForPerson(person);
+	            	List<MedicalRecord> medicalRecords = (List<MedicalRecord>) findMedicalRecordForPerson(person);
+	            	MedicalRecord medicalRecord = null;
+	            	
+	            	//CORRECTION !!!
+	            	if (!medicalRecords.isEmpty()) {
+	            		medicalRecord = medicalRecords.get(0);
+	            	} else {
+	            		continue;
+	            	}
 
 	                if (medicalRecord != null) {
 	                    int age = medicalRecord.getAge();

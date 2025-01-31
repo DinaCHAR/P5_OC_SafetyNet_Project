@@ -1,7 +1,9 @@
 package com.openclassroom.api.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,14 @@ public class FloodController {
      * @return Les foyers regroupés par adresse, avec les informations des habitants.
      */
     @GetMapping("/flood/stations")
-    public Map<String, List<Map<String, Object>>> getHouseholdsByStations(@RequestParam List<Integer> stations) {
-        return floodService.getHouseholdsByStations(stations);
+    public Map<String, List<Map<String, Object>>> getHouseholdsByStations(@RequestParam String stations) {
+        // Convertir la liste de stations en liste d'entiers
+        List<Integer> stationNumbers = Arrays.stream(stations.split(",")) //Séparer la chaine par des virgules
+                .map(String::trim) //Supprimer les espaces
+                .map(Integer::parseInt) //Convertir chaque element en entier
+                .collect(Collectors.toList()); //Collect les résultat sous la forme d'un liste
+
+        //Appel du service pour récupérer les foyer par numéro de station
+        return floodService.getHouseholdsByStations(stationNumbers);
     }
 }

@@ -14,7 +14,7 @@ public class PersonService {
     private MyRepository myRepository;
 
     /**
-     * Ajoute une nouvelle personne dans le rEferentiel.
+     * Ajoute une nouvelle personne dans le referentiel.
      * 
      * @param person La personne a ajouter.
      * @return true si la personne a ete ajoutee avec succes, false sinon.
