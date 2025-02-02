@@ -1,5 +1,7 @@
 package com.openclassroom.api.service;
 
+import java.util.List;
+
 import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,4 +86,8 @@ public class PersonService {
             person.getFirstName().equalsIgnoreCase(firstName) &&
             person.getLastName().equalsIgnoreCase(lastName));
     }
+
+	public List<Person> getPersons() {
+		return myRepository.getPersons();
+	}
 }
