@@ -63,7 +63,31 @@ public class Person {
 	
 	//CONSTRUCTEUR VIDE
 	public Person() {
-		
+	}
+	
+	public Person(String firstName, String lastName, String address) {
+	    this.firstName = firstName;
+	    this.lastName = lastName;
+	    this.address = address;
+	}
+
+	public Person(String firstName, String lastName, String address, String city, String email) {
+	    this.firstName = firstName;
+	    this.lastName = lastName;
+	    this.address = address;
+	    this.city = city;
+	    this.email = email;
+	}
+	
+	public Person(String firstName, String lastName, String address, String city, String zip, String phone,
+			String email) {
+		this.firstName = firstName;
+	    this.lastName = lastName;
+	    this.address = address;
+	    this.city = city;
+	    this.zip = zip;
+	    this.phone = phone;
+	    this.email = email;
 	}
 	@Override
 	public String toString() {

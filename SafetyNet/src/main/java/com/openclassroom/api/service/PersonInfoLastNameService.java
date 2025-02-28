@@ -4,6 +4,8 @@ import com.openclassroom.api.model.MedicalRecord;
 import com.openclassroom.api.model.Person;
 import com.openclassroom.api.repository.MyRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,9 @@ import java.util.Map;
 @Service
 public class PersonInfoLastNameService {
 
-	@Autowired
+    private static final Logger logger = LoggerFactory.getLogger(PersonInfoLastNameService.class);
+
+    @Autowired
     private MyRepository myRepository;
 
     /**
@@ -25,6 +29,8 @@ public class PersonInfoLastNameService {
      * @return Une liste contenant les informations des personnes avec ce nom de famille, ou une liste vide si aucune correspondance n'est trouvée.
      */
     public List<Map<String, Object>> getPersonInfoByLastName(String lastName) {
+        logger.info("Recherche des informations des personnes ayant le nom de famille : {}", lastName);
+
         // Initialiser une liste pour stocker les informations des personnes correspondantes.
         List<Map<String, Object>> personInfoList = new ArrayList<>();
 
@@ -32,6 +38,8 @@ public class PersonInfoLastNameService {
         for (Person person : myRepository.getPersons()) {
             // Vérifier si le nom de famille correspond (insensible à la casse).
             if (person.getLastName().equalsIgnoreCase(lastName)) {
+                logger.info("Personne trouvée : {} {}", person.getFirstName(), person.getLastName());
+
                 // Trouver le dossier médical de la personne.
                 MedicalRecord medicalRecord = findMedicalRecordForPerson(person);
 
@@ -48,8 +56,14 @@ public class PersonInfoLastNameService {
 
                     // Ajouter les informations collectées à la liste finale.
                     personInfoList.add(personInfo);
+                } else {
+                    logger.warn("Aucun dossier médical trouvé pour : {} {}", person.getFirstName(), person.getLastName());
                 }
             }
+        }
+
+        if (personInfoList.isEmpty()) {
+            logger.info("Aucune personne trouvée avec le nom de famille : {}", lastName);
         }
 
         // Retourner la liste des informations des personnes ayant le nom de famille donné.

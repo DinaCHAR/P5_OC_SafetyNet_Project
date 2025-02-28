@@ -25,6 +25,10 @@ public class FireStations {
 	public FireStations () {
 		
 	}
+	public FireStations(String address, String station) {
+		this.address = address;
+		this.station = station;
+	}
 	@Override
 	public String toString() {
 		return "FireStations [address=" + address + ", station=" + station + "]";

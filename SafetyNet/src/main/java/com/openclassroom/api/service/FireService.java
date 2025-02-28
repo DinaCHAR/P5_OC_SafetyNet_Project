@@ -1,8 +1,7 @@
 package com.openclassroom.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,13 @@ import com.openclassroom.api.model.Person;
 import com.openclassroom.api.model.PersonByFirestation;
 import com.openclassroom.api.repository.MyRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FireService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FireService.class);
 
     @Autowired
     private MyRepository myRepository;
@@ -25,6 +29,8 @@ public class FireService {
      * @return Un objet `PersonByFirestation` contenant les personnes, les enfants, les adultes et le numéro de station.
      */
     public PersonByFirestation getPersonsByAddress(String address) {
+        logger.info("Début de la récupération des personnes pour l'adresse : {}", address);
+
         // Initialisation du résultat
         PersonByFirestation result = new PersonByFirestation();
         List<Person> personsAtAddress = new ArrayList<>();
@@ -62,6 +68,9 @@ public class FireService {
         if (fireStation != null) {
             result.setPersonsAtAddress(Integer.parseInt(fireStation.getStation())); // Stocker la station dans le champ approprié
         }
+
+        logger.info("Fin de la récupération des personnes pour l'adresse : {}", address);
+        logger.info("Nombre d'enfants : {}, Nombre d'adultes : {}", childCount, adultCount);
 
         // Retourner le résultat
         return result;

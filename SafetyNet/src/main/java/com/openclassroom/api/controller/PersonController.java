@@ -17,7 +17,6 @@ import com.openclassroom.api.model.Person;
 import com.openclassroom.api.service.PersonService;
 
 @RestController
-@RequestMapping("/person")
 public class PersonController {
 
     @Autowired
@@ -28,7 +27,7 @@ public class PersonController {
     	return personService.getPersons();
     }
     // Endpoint pour ajouter une nouvelle personne
-    @PostMapping
+    @PostMapping("/person")
     public ResponseEntity<String> addPerson(@RequestBody Person person) {
         boolean added = personService.addPerson(person);
         if (added) {
@@ -39,7 +38,7 @@ public class PersonController {
     }
 
     // Endpoint mettre a jour une nouvelle personne
-    @PutMapping
+    @PutMapping("/person")
     public ResponseEntity<String> updatePerson(@RequestBody Person person) {
         Person updated = personService.updatePerson(person);
         if (updated != null) {
@@ -50,7 +49,7 @@ public class PersonController {
     }
 
     // Endpoint supp une personne avec nom et prenom
-    @DeleteMapping
+    @DeleteMapping("/person")
     public ResponseEntity<String> deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
         boolean deleted = personService.deletePerson(firstName, lastName);
         if (deleted) {
