@@ -168,7 +168,7 @@ public class FireStationService {
 
         List<FireStation> updatedList = myRepository.getFireStations()
                 .stream()
-                .filter(fs -> !fs.getAddress().equalsIgnoreCase(address))
+                .filter(fs -> fs.getAddress() != null && !fs.getAddress().equalsIgnoreCase(address))
                 .collect(Collectors.toList());
 
         if (updatedList.size() == myRepository.getFireStations().size()) {
