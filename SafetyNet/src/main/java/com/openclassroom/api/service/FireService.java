@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.openclassroom.api.model.FireStations;
+import com.openclassroom.api.model.FireStation;
 import com.openclassroom.api.model.MedicalRecord;
 import com.openclassroom.api.model.Person;
 import com.openclassroom.api.model.PersonByFirestation;
@@ -61,7 +61,7 @@ public class FireService {
         result.setAdultCount(adultCount);
 
         // Récupérer la caserne des pompiers associée à l'adresse
-        FireStations fireStation = myRepository.getFireStations().stream()
+        FireStation fireStation = myRepository.getFireStations().stream()
                 .filter(station -> station.getAddress().equalsIgnoreCase(address))
                 .findFirst()
                 .orElse(null);

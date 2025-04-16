@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.openclassroom.api.model.FireStations;
+import com.openclassroom.api.model.FireStation;
 import com.openclassroom.api.model.Person;
 import com.openclassroom.api.model.PhoneByFireStation;
 import com.openclassroom.api.repository.MyRepository;
@@ -33,12 +33,12 @@ public class PhoneAlertService {
 
         // Récupération de toutes les personnes et casernes de pompiers
         List<Person> persons = myRepository.getPersons();
-        List<FireStations> fireStations = myRepository.getFireStations();
+        List<FireStation> fireStations = myRepository.getFireStations();
 
         // Étape 1 : Trouver toutes les adresses associées à la caserne spécifiée
         List<String> addresses = fireStations.stream()
             .filter(fs -> fs.getStation().equals(firestation_number)) // Filtrer par numéro de caserne
-            .map(FireStations::getAddress) // Obtenir l'adresse de chaque caserne filtrée
+            .map(FireStation::getAddress) // Obtenir l'adresse de chaque caserne filtrée
             .collect(Collectors.toList());
 
         logger.info("Adresses trouvées pour la caserne {} : {}", firestation_number, addresses);

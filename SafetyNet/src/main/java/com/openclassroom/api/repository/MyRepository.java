@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassroom.SafetyNet.SafetyNetApplication;
-import com.openclassroom.api.model.FireStations;
+import com.openclassroom.api.SafetyNetApplication;
+import com.openclassroom.api.model.FireStation;
 import com.openclassroom.api.model.MedicalRecord;
 import com.openclassroom.api.model.Person;
 
@@ -31,7 +31,7 @@ public class MyRepository {
 	//CREE DES VAR POUR RECUP DES LISTE DE PERSONNES
 	 List<Person> persons = null;
 	 List<MedicalRecord> medicalRecords = null;
-	 List<FireStations> fireStations = null;
+	 List<FireStation> fireStations = null;
 
 	// Méthode pour initialiser le chargement des données
     public void Init() {
@@ -70,8 +70,8 @@ public class MyRepository {
             // Récupérer le tableau sous la clé "firestations"
             JsonNode fireStationsNode = rootNode.path("firestations");
             if (fireStationsNode.isArray()) {
-                this.fireStations = objectMapper.readValue(fireStationsNode.toString(), new TypeReference<List<FireStations>>() {});
-                for (FireStations station : fireStations) {
+                this.fireStations = objectMapper.readValue(fireStationsNode.toString(), new TypeReference<List<FireStation>>() {});
+                for (FireStation station : fireStations) {
                     System.out.println(station);
                 }
             }
@@ -103,17 +103,39 @@ public class MyRepository {
 		this.medicalRecords = medicalRecords;
 	}
 
-	public List<FireStations> getFireStations() {
+	public List<FireStation> getFireStations() {
 		if(fireStations == null) {
 			Init();
 		}
 		return fireStations;
 	}
 
-	public void setFireStations(List<FireStations> fireStations) {
+	public void setFireStations(List<FireStation> fireStations) {
 		this.fireStations = fireStations;
 	}
 
 	
 	
+	public void addPerson(Person person) {
+	    if (persons == null) {
+	        Init();
+	    }
+	    persons.add(person);
+	}
+
+	public void addFireStation(FireStation fireStation) {
+	    if (fireStations == null) {
+	        Init();
+	    }
+	    fireStations.add(fireStation);
+	}
+
+	public void clearData() {
+	    if (persons != null) {
+	        persons.clear();
+	    }
+	    if (fireStations != null) {
+	        fireStations.clear();
+	    }
+	}
 }

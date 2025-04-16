@@ -1,6 +1,6 @@
 package com.openclassroom.api.controller;
 
-import com.openclassroom.api.model.FireStations;
+import com.openclassroom.api.model.FireStation;
 import com.openclassroom.api.model.PersonByFirestation;
 import com.openclassroom.api.service.FireStationService;
 
@@ -51,7 +51,7 @@ public class FireStationController {
      */
     @PostMapping
     public ResponseEntity<String> addFireStation(@RequestParam String address, @RequestParam int station) {
-        FireStations result = fireStationService.addFireStationMapping(address, station);
+        FireStation result = fireStationService.addFireStationMapping(address, station);
         if (result != null) {
             return ResponseEntity.ok("Fire station mapping successfully added.");
         } else {
@@ -69,7 +69,7 @@ public class FireStationController {
      */
     @PutMapping
     public ResponseEntity<String> updateFireStation(@RequestParam String address, @RequestParam String newStation) {
-        FireStations result = fireStationService.updateFireStationMapping(address, newStation);
+        FireStation result = fireStationService.updateFireStationMapping(address, newStation);
         if (result != null) {
             return ResponseEntity.ok("Fire station mapping successfully updated.");
         } else {

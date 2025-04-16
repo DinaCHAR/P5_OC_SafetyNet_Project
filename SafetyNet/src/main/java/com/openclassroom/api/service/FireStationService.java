@@ -1,6 +1,6 @@
 package com.openclassroom.api.service;
 
-import com.openclassroom.api.model.FireStations;
+import com.openclassroom.api.model.FireStation;
 import com.openclassroom.api.model.MedicalRecord;
 import com.openclassroom.api.model.Person;
 import com.openclassroom.api.model.PersonByFirestation;
@@ -31,7 +31,7 @@ public class FireStationService {
         logger.info("Début de la récupération des personnes couvertes par la station de pompiers : {}", stationNumber);
 
         // Récupération de la liste des stations de pompiers à partir du dépôt
-        List<FireStations> stations = myRepository.getFireStations();
+        List<FireStation> stations = myRepository.getFireStations();
         // Liste pour stocker les personnes couvertes par la station demandée
         List<Person> personsCovered = new ArrayList<>();
         // Compteurs pour le nombre d'adultes et d'enfants
@@ -39,7 +39,7 @@ public class FireStationService {
         int childCount = 0;
 
         // Parcourir toutes les stations de pompiers
-        for (FireStations station : stations) {
+        for (FireStation station : stations) {
             // Vérifier si le numéro de la station correspond à celui demandé
             if (station.getStation().equals(stationNumber)) {
                 // Récupérer l'adresse associée à cette station
@@ -49,6 +49,7 @@ public class FireStationService {
                 // Rechercher toutes les personnes dont l'adresse correspond à celle de la station
                 for (Person person : myRepository.getPersons()) {
                     // Comparer les adresses
+                	logger.debug("QUI EST LA : {}", person);
                     if (person.getAddress().equals(stationAddress)) {
                         // Récupérer l'enregistrement médical associé à cette personne pour déterminer son âge
                         MedicalRecord medicalRecord = findMedicalRecordForPerson(person);
@@ -114,10 +115,10 @@ public class FireStationService {
      * @param station Le numéro de la caserne.
      * @return FireStations ajouté ou null si un mapping existe déjà.
      */
-    public FireStations addFireStationMapping(String address, int station) {
+    public FireStation addFireStationMapping(String address, int station) {
         logger.info("Tentative d'ajout d'une nouvelle caserne pour l'adresse : {}", address);
 
-        Optional<FireStations> existingMapping = myRepository.getFireStations()
+        Optional<FireStation> existingMapping = myRepository.getFireStations()
                 .stream()
                 .filter(fs -> fs.getAddress().equalsIgnoreCase(address))
                 .findFirst();
@@ -127,7 +128,7 @@ public class FireStationService {
             return null; // Évite les doublons
         }
 
-        FireStations newMapping = new FireStations();
+        FireStation newMapping = new FireStation();
         myRepository.getFireStations().add(newMapping);
         logger.info("Nouveau mapping ajouté pour l'adresse : {}", address);
 
@@ -141,10 +142,10 @@ public class FireStationService {
      * @param newStation Le nouveau numéro de caserne.
      * @return FireStations mis à jour ou null si l'adresse n'existe pas.
      */
-    public FireStations updateFireStationMapping(String address, String newStation) {
+    public FireStation updateFireStationMapping(String address, String newStation) {
         logger.info("Tentative de mise à jour de la station pour l'adresse : {}", address);
 
-        for (FireStations fs : myRepository.getFireStations()) {
+        for (FireStation fs : myRepository.getFireStations()) {
             if (fs.getAddress().equalsIgnoreCase(address)) {
                 fs.setStation(newStation);
                 logger.info("Station mise à jour pour l'adresse : {}", address);
@@ -165,7 +166,7 @@ public class FireStationService {
     public boolean deleteFireStationMapping(String address) {
         logger.info("Tentative de suppression du mapping pour l'adresse : {}", address);
 
-        List<FireStations> updatedList = myRepository.getFireStations()
+        List<FireStation> updatedList = myRepository.getFireStations()
                 .stream()
                 .filter(fs -> !fs.getAddress().equalsIgnoreCase(address))
                 .collect(Collectors.toList());

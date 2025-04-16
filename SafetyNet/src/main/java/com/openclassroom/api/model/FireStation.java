@@ -2,7 +2,7 @@ package com.openclassroom.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class FireStations {
+public class FireStation {
 
 	@JsonProperty("address")
 	private String address;
@@ -22,16 +22,16 @@ public class FireStations {
 		this.station = station;
 	}
 	
-	public FireStations () {
+	public FireStation () {
 		
 	}
-	public FireStations(String address, String station) {
+	public FireStation(String address, String station) {
 		this.address = address;
 		this.station = station;
 	}
 	@Override
 	public String toString() {
-		return "FireStations [address=" + address + ", station=" + station + "]";
+		return "FireStation [address=" + address + ", station=" + station + "]";
 	}
 }
 
